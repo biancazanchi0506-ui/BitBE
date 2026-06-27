@@ -1,11 +1,12 @@
 import { MikroORM } from '@mikro-orm/core'
+import { MySqlDriver } from '@mikro-orm/mysql'
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter'
 
 export const orm = await MikroORM.init({
   entities: ['dist/**/*.entity.js'],
   entitiesTs: ['src/**/*.entity.ts'],
   dbName: 'bitacora',
-  type: 'mysql',
+  driver: MySqlDriver,
   clientUrl: 'mysql://root:Manolito_123@localhost:3306/bitacora',
   highlighter: new SqlHighlighter(),
   debug: true,
@@ -18,10 +19,9 @@ export const orm = await MikroORM.init({
 })
 
 export const syncSchema = async () => {
-  const generator = orm.getSchemaGenerator()
-  /*   
-  await generator.dropSchema()
-  await generator.createSchema()
+  /*
+  await orm.schema.drop()
+  await orm.schema.create()
   */
-  await generator.updateSchema()
+  await orm.schema.update()
 }
