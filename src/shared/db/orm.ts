@@ -1,20 +1,22 @@
-import {MikroORM} from "@mikro-orm/core";
-import {SglHighLighter} from "@mikro-orm/sql-highlighter";
+import { MikroORM } from '@mikro-orm/core'
+import { SqlHighlighter } from '@mikro-orm/sql-highlighter'
 
 export const orm = await MikroORM.init({
-  entities : ['./dist/shared/db/entities'], 
-  entitiesTs : ['./src/shared/db/entities'],
-  dbName : 'bitacora',
-  type : 'mysql',
-  clientUrl : 'mysql://root:root@localhost:3306/bitacora',
-  highlighter : new SglHighLighter(),
-  debug : true,
-  shemaGenerator : {
-    disableForeignKeys : true,
-    createForeignKeyConstraints : true,
-    ignoreSchema : [],
+  entities: ['dist/**/*.entity.js'],
+  entitiesTs: ['src/**/*.entity.ts'],
+  dbName: 'bitacora',
+  type: 'mysql',
+  clientUrl: 'mysql://root:Manolito_123@localhost:3306/bitacora',
+  highlighter: new SqlHighlighter(),
+  debug: true,
+  schemaGenerator: {
+    //never in production
+    disableForeignKeys: true,
+    createForeignKeyConstraints: true,
+    ignoreSchema: [],
   },
-});
+})
+
 export const syncSchema = async () => {
   const generator = orm.getSchemaGenerator()
   /*   
