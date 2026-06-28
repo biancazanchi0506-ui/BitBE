@@ -5,13 +5,13 @@ import { orm, syncSchema } from './shared/db/orm.js'
 import { RequestContext } from '@mikro-orm/core'
 
 const app = express()
+
 app.use(express.json())
 
-//luego de los middlewares base
+// Middleware de MikroORM — contexto por request
 app.use((req, res, next) => {
   RequestContext.create(orm.em, next)
 })
-//antes de las rutas y middlewares de negocio
 
 app.use('/api/usuarios', usuarioRouter)
 
@@ -19,8 +19,18 @@ app.use((_, res) => {
   return res.status(404).send({ message: 'Resource not found' })
 })
 
-await syncSchema() //never in production
+// Función de arranque
+async function main() {
+  try {
+    await syncSchema()
+    app.listen(3000, () => {
+      console.log('Server running on http://localhost:3000/')
+    })
+  } catch (error) {
+    console.error('Error al iniciar el servidor:', error)
+    await orm.close(true)
+    process.exit(1)
+  }
+}
 
-app.listen(3000, () => {
-  console.log('Server runnning on http://localhost:3000/')
-})
+main()
