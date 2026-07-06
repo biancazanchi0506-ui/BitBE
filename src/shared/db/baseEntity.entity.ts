@@ -1,17 +1,12 @@
-import { EntitySchema } from '@mikro-orm/core'
+import { PrimaryKey, Property } from '@mikro-orm/core'
 
 export abstract class BaseEntity {
+  @PrimaryKey()
   id!: number
+
+  @Property()
   createdAt: Date = new Date()
+
+  @Property({ onUpdate: () => new Date() })
   updatedAt: Date = new Date()
 }
-
-export const BaseEntitySchema = new EntitySchema<BaseEntity>({
-  class: BaseEntity,
-  abstract: true,
-  properties: {
-    id: { type: 'number', primary: true, autoincrement: true },
-    createdAt: { type: Date },
-    updatedAt: { type: Date, onUpdate: () => new Date() },
-  },
-})

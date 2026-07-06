@@ -1,22 +1,29 @@
-// eslint-disable-next-line import/no-cycle
-import { EntitySchema } from '@mikro-orm/core'
-import { BaseEntity, BaseEntitySchema } from '../shared/db/baseEntity.entity.js'
-import { UsuarioClass } from './usuarioClass.entity.js'
+import { Entity, Property } from '@mikro-orm/core'
+import { BaseEntity } from '../shared/db/baseEntity.entity.js'
 
+@Entity()
 export class Usuario extends BaseEntity {
+  @Property({ nullable: false, unique: true })
   username!: string
-  email!: string
-  password!: string
-  usuarioClass?: UsuarioClass
-}
 
-export const UsuarioSchema = new EntitySchema<Usuario, BaseEntity>({
-  class: Usuario,
-  extends: BaseEntitySchema,
-  properties: {
-    username: { type: 'string', unique: true, nullable: false },
-    email: { type: 'string', unique: true, nullable: false },
-    password: { type: 'string', nullable: false },
-    usuarioClass: { kind: 'm:1', entity: () => UsuarioClass, nullable: true },
-  },
-})
+  @Property({ length: 100, nullable: false })
+  nombre!: string
+
+  @Property({ length: 100, nullable: false })
+  apellido!: string
+
+  @Property({ type: 'date', nullable: true })
+  fechaNac?: Date
+
+  @Property({ type: 'text', nullable: true })
+  biografia?: string
+
+  @Property({ length: 150, nullable: false, unique: true })
+  email!: string
+
+  @Property({ length: 255, nullable: false })
+  password!: string
+
+  @Property({ length: 50, nullable: true })
+  telefono?: string
+}

@@ -1,0 +1,68 @@
+### GET all usuarios
+http://localhost:3000/api/usuarios
+
+
+### POST a usuario
+# @name createUsuario
+POST http://localhost:3000/api/usuarios
+Content-Type: application/json
+
+{
+    "username": "emiliaiglesias",
+    "nombre": "Emilia",
+    "apellido": "Iglesias",
+    "fechaNac": "2003-05-10",
+    "biografia": "Estudiante de Desarrollo de Software.",
+    "email": "emilia@example.com",
+    "password": "123456",
+    "telefono": "3794000000"
+}
+
+### ID
+@id = {{createUsuario.response.body.data.id}}
+
+### GET one usuario
+http://localhost:3000/api/usuarios/{{id}}
+
+### PUT a usuario
+PUT http://localhost:3000/api/usuarios/{{id}}
+Content-Type: application/json
+
+{
+  "username": "emiliaiglesias10",
+  "nombre": "Emilia",
+  "apellido": "Iglesias",
+  "fechaNac": "2003-05-10",
+  "biografia": "Estudiante de Desarrollo de Software, UTN FRRO.",
+  "email": "emiliaiglesias10@gmail.com",
+  "password": "654321",
+  "telefono": "3794000001"
+}
+
+### POST a usuario
+# @name createUsuarioToDelete
+POST http://localhost:3000/api/usuarios
+Content-Type: application/json
+
+{
+    "username": "usuarioBorrar",
+    "nombre": "Usuario",
+    "apellido": "Borrar",
+    "email": "borrar@example.com",
+    "password": "123456"
+}
+
+### DELETE a usuario
+@idToDelete = {{createUsuarioToDelete.response.body.data.id}}
+DELETE http://localhost:3000/api/usuarios/{{idToDelete}}
+
+### PATCH a usuario
+PATCH http://localhost:3000/api/usuarios/{{id}}
+Content-Type: application/json
+
+{
+  "telefono": "3794999999"
+}
+
+### DELETE a usuario
+DELETE http://localhost:3000/api/usuarios/{{idToDelete}}

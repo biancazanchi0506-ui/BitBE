@@ -13,8 +13,8 @@
   "license": "ISC",
   "packageManager": "pnpm@10.32.1",
   "dependencies": {
-    "@mikro-orm/core": "^7.1.5",
-    "@mikro-orm/mysql": "^7.1.5",
+    "@mikro-orm/core": "^6.6.15",
+    "@mikro-orm/mysql": "^6.6.15",
     "@mikro-orm/sql-highlighter": "^1.0.1",
     "dotenv": "^17.4.2",
     "express": "5.2.1",
