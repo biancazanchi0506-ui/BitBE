@@ -1,5 +1,6 @@
-import { Entity, Property } from '@mikro-orm/core'
+import { Entity, Property, OneToMany, ManyToMany, Collection, Cascade, Rel } from '@mikro-orm/core'
 import { BaseEntity } from '../shared/db/baseEntity.entity.js'
+import { Viaje } from '../viaje/viaje.entity.js'
 
 @Entity()
 export class Usuario extends BaseEntity {
@@ -26,4 +27,12 @@ export class Usuario extends BaseEntity {
 
   @Property({ length: 50, nullable: true })
   telefono?: string
+
+  @OneToMany(() => Viaje, (viaje) => viaje.creador, {
+  cascade: [Cascade.ALL],
+  })
+  viajesCreados = new Collection<Viaje>(this)
+
+  @ManyToMany(() => Viaje, (viaje) => viaje.participantes)
+  viajesParticipados = new Collection<Viaje>(this)
 }
