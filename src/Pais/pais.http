@@ -1,0 +1,49 @@
+### GET all paises
+GET http://localhost:3000/api/paises
+
+### POST a pais
+# @name createPais
+POST http://localhost:3000/api/paises
+Content-Type: application/json
+
+{
+    "nombrePais": "Argentina",
+    "descripcionPais": "País de Sudamérica."
+}
+
+### ID
+@id = {{createPais.response.body.data.id}}
+
+### GET one pais
+GET http://localhost:3000/api/paises/{{id}}
+
+### PUT a pais
+PUT http://localhost:3000/api/paises/{{id}}
+Content-Type: application/json
+
+{
+    "nombrePais": "Argentina",
+    "descripcionPais": "País de Sudamérica, capital Buenos Aires."
+}
+
+### POST a pais to delete
+# @name createPaisToDelete
+POST http://localhost:3000/api/paises
+Content-Type: application/json
+
+{
+    "nombrePais": "PaisBorrar",
+    "descripcionPais": "Para borrar."
+}
+
+### DELETE a pais
+@idToDelete = {{createPaisToDelete.response.body.data.id}}
+DELETE http://localhost:3000/api/paises/{{idToDelete}}
+
+### PATCH a pais
+PATCH http://localhost:3000/api/paises/{{id}}
+Content-Type: application/json
+
+{
+    "descripcionPais": "Descripción actualizada por PATCH."
+}

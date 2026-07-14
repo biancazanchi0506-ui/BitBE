@@ -1,0 +1,71 @@
+### NOTA: viaje.entity.ts, viaje.controller.ts y viaje.routes.ts todavía están vacíos
+### y no hay ruta registrada en app.ts. Este archivo asume una estructura razonable
+### (basada en la relación Usuario.viajesCreados / Usuario.viajesParticipados) y
+### NO va a funcionar hasta que se implemente la entidad Viaje, el controller y las rutas.
+
+### GET all viajes
+GET http://localhost:3000/api/viajes
+
+### POST a viaje
+# @name createViaje
+POST http://localhost:3000/api/viajes
+Content-Type: application/json
+
+{
+    "nombreViaje": "Vacaciones en Bariloche",
+    "descripcionViaje": "Viaje de egresados a la Patagonia.",
+    "fechaInicio": "2026-12-01",
+    "fechaFin": "2026-12-10",
+    "creador": 1
+}
+
+### ID
+@id = {{createViaje.response.body.data.id}}
+
+### GET one viaje
+GET http://localhost:3000/api/viajes/{{id}}
+
+### PUT a viaje
+PUT http://localhost:3000/api/viajes/{{id}}
+Content-Type: application/json
+
+{
+    "nombreViaje": "Vacaciones en Bariloche",
+    "descripcionViaje": "Viaje de egresados a la Patagonia, con excursión al Cerro Catedral.",
+    "fechaInicio": "2026-12-01",
+    "fechaFin": "2026-12-12",
+    "creador": 1
+}
+
+### POST a viaje to delete
+# @name createViajeToDelete
+POST http://localhost:3000/api/viajes
+Content-Type: application/json
+
+{
+    "nombreViaje": "ViajeBorrar",
+    "descripcionViaje": "Para borrar.",
+    "fechaInicio": "2026-01-01",
+    "fechaFin": "2026-01-05",
+    "creador": 1
+}
+
+### DELETE a viaje
+@idToDelete = {{createViajeToDelete.response.body.data.id}}
+DELETE http://localhost:3000/api/viajes/{{idToDelete}}
+
+### PATCH a viaje
+PATCH http://localhost:3000/api/viajes/{{id}}
+Content-Type: application/json
+
+{
+    "descripcionViaje": "Descripción actualizada por PATCH."
+}
+
+### POST agregar participante a un viaje (ejemplo hipotético)
+POST http://localhost:3000/api/viajes/{{id}}/participantes
+Content-Type: application/json
+
+{
+    "usuarioId": 2
+}
