@@ -1,22 +1,15 @@
-import { Entity, Property, ManyToOne, ManyToMany, Collection, Rel } from '@mikro-orm/core'
+import { Entity, Property, ManyToOne, Rel } from '@mikro-orm/core'
 import { BaseEntity } from '../shared/db/baseEntity.entity.js'
-import { Usuario } from './usuario.entity.js'
+import { Pais } from './pais.entity.js'
 
 @Entity()
-export class Viaje extends BaseEntity {
+export class Localidad extends BaseEntity {
+  @Property({ length: 100, nullable: false })
+  nombreLocalidad!: string
 
-  @Property()
-  nombre!: string
+  @Property({ type: 'text', nullable: true })
+  descripcionLocalidad?: string
 
-  @Property()
-  fechaInicio!: Date
-
-  @Property()
-  fechaFin!: Date
-
-  @ManyToOne(() => Usuario)
-  creador!: Rel<Usuario>
-
-  @ManyToMany(() => Usuario)
-  participantes = new Collection<Usuario>(this)
+  @ManyToOne(() => Pais, { nullable: false })
+  pais!: Rel<Pais>
 }

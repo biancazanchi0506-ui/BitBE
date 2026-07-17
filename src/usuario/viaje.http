@@ -1,8 +1,3 @@
-### NOTA: viaje.entity.ts, viaje.controller.ts y viaje.routes.ts todavía están vacíos
-### y no hay ruta registrada en app.ts. Este archivo asume una estructura razonable
-### (basada en la relación Usuario.viajesCreados / Usuario.viajesParticipados) y
-### NO va a funcionar hasta que se implemente la entidad Viaje, el controller y las rutas.
-
 ### GET all viajes
 GET http://localhost:3000/api/viajes
 
@@ -62,7 +57,7 @@ Content-Type: application/json
     "descripcionViaje": "Descripción actualizada por PATCH."
 }
 
-### POST agregar participante a un viaje (ejemplo hipotético)
+### POST agregar participante a un viaje 
 POST http://localhost:3000/api/viajes/{{id}}/participantes
 Content-Type: application/json
 

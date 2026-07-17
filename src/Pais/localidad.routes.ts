@@ -1,10 +1,11 @@
 import { Router } from 'express'
-import { findAll, findOne, add, update, remove } from './viaje.controller.js'
+import { sanitizeLocalidadInput, findAll, findOne, add, update, remove } from './localidad.controller.js'
 
-export const viajeRouter = Router()
+export const localidadRouter = Router()
 
-viajeRouter.get('/', findAll)
-viajeRouter.get('/:id', findOne)
-viajeRouter.post('/', add)
-viajeRouter.put('/:id', update)
-viajeRouter.delete('/:id', remove)
+localidadRouter.get('/', findAll)
+localidadRouter.get('/:id', findOne)
+localidadRouter.post('/', sanitizeLocalidadInput, add)
+localidadRouter.put('/:id', sanitizeLocalidadInput, update)
+localidadRouter.patch('/:id', sanitizeLocalidadInput, update)
+localidadRouter.delete('/:id', remove)

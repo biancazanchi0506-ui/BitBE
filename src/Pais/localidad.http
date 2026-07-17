@@ -1,71 +1,65 @@
-### NOTA: viaje.entity.ts, viaje.controller.ts y viaje.routes.ts todavía están vacíos
-### y no hay ruta registrada en app.ts. Este archivo asume una estructura razonable
-### (basada en la relación Usuario.viajesCreados / Usuario.viajesParticipados) y
-### NO va a funcionar hasta que se implemente la entidad Viaje, el controller y las rutas.
-
-### GET all viajes
-GET http://localhost:3000/api/viajes
-
-### POST a viaje
-# @name createViaje
-POST http://localhost:3000/api/viajes
+### POST a pais (para tener un id de país válido)
+# @name createPais
+POST http://localhost:3000/api/paises
 Content-Type: application/json
 
 {
-    "nombreViaje": "Vacaciones en Bariloche",
-    "descripcionViaje": "Viaje de egresados a la Patagonia.",
-    "fechaInicio": "2026-12-01",
-    "fechaFin": "2026-12-10",
-    "creador": 1
+    "nombrePais": "Argentina",
+    "descripcionPais": "País de Sudamérica."
+}
+
+### paisId
+@paisId = {{createPais.response.body.data.id}}
+
+### GET all localidades
+GET http://localhost:3000/api/localidades
+
+### POST a localidad
+# @name createLocalidad
+POST http://localhost:3000/api/localidades
+Content-Type: application/json
+
+{
+    "nombreLocalidad": "Rosario",
+    "descripcionLocalidad": "Ciudad de la provincia de Santa Fe.",
+    "pais": {{paisId}}
 }
 
 ### ID
-@id = {{createViaje.response.body.data.id}}
+@id = {{createLocalidad.response.body.data.id}}
 
-### GET one viaje
-GET http://localhost:3000/api/viajes/{{id}}
+### GET one localidad
+GET http://localhost:3000/api/localidades/{{id}}
 
-### PUT a viaje
-PUT http://localhost:3000/api/viajes/{{id}}
+### PUT a localidad
+PUT http://localhost:3000/api/localidades/{{id}}
 Content-Type: application/json
 
 {
-    "nombreViaje": "Vacaciones en Bariloche",
-    "descripcionViaje": "Viaje de egresados a la Patagonia, con excursión al Cerro Catedral.",
-    "fechaInicio": "2026-12-01",
-    "fechaFin": "2026-12-12",
-    "creador": 1
+    "nombreLocalidad": "Rosario",
+    "descripcionLocalidad": "Ciudad de la provincia de Santa Fe, a orillas del río Paraná.",
+    "pais": {{paisId}}
 }
 
-### POST a viaje to delete
-# @name createViajeToDelete
-POST http://localhost:3000/api/viajes
+### POST a localidad to delete
+# @name createLocalidadToDelete
+POST http://localhost:3000/api/localidades
 Content-Type: application/json
 
 {
-    "nombreViaje": "ViajeBorrar",
-    "descripcionViaje": "Para borrar.",
-    "fechaInicio": "2026-01-01",
-    "fechaFin": "2026-01-05",
-    "creador": 1
+    "nombreLocalidad": "LocalidadBorrar",
+    "descripcionLocalidad": "Para borrar.",
+    "pais": {{paisId}}
 }
 
-### DELETE a viaje
-@idToDelete = {{createViajeToDelete.response.body.data.id}}
-DELETE http://localhost:3000/api/viajes/{{idToDelete}}
+### DELETE a localidad
+@idToDelete = {{createLocalidadToDelete.response.body.data.id}}
+DELETE http://localhost:3000/api/localidades/{{idToDelete}}
 
-### PATCH a viaje
-PATCH http://localhost:3000/api/viajes/{{id}}
+### PATCH a localidad
+PATCH http://localhost:3000/api/localidades/{{id}}
 Content-Type: application/json
 
 {
-    "descripcionViaje": "Descripción actualizada por PATCH."
-}
-
-### POST agregar participante a un viaje (ejemplo hipotético)
-POST http://localhost:3000/api/viajes/{{id}}/participantes
-Content-Type: application/json
-
-{
-    "usuarioId": 2
+    "descripcionLocalidad": "Descripción actualizada por PATCH."
 }
