@@ -5,7 +5,7 @@ import { UniqueConstraintViolationException } from '@mikro-orm/core'
 import { Viaje } from './viaje.entity.js'
 
 function parseId(req: Request): number {
-  const id = Number.parseInt(req.params.id)
+  const id = Number.parseInt(req.params.id as string)
   if (Number.isNaN(id)) {
     throw new Error('INVALID_ID')
   }
