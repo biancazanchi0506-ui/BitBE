@@ -4,6 +4,7 @@ import { usuarioRouter } from './usuario/usuario.routes.js'
 import { paisRouter } from './pais/pais.routes.js'
 import { localidadRouter } from './pais/localidad.routes.js'
 import { viajeRouter } from './usuario/viaje.routes.js'
+import { hospedajeRouter } from './pais/hospedaje.routes.js'
 import { orm, syncSchema } from './shared/db/orm.js'
 import { RequestContext } from '@mikro-orm/core'
 
@@ -20,6 +21,7 @@ app.use('/api/usuarios', usuarioRouter)
 app.use('/api/paises', paisRouter)
 app.use('/api/localidades', localidadRouter)
 app.use('/api/viajes', viajeRouter)
+app.use('/api/hospedajes', hospedajeRouter)
 app.use((_, res) => {
   return res.status(404).send({ message: 'Resource not found' })
 })
