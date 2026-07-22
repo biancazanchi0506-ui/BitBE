@@ -1,16 +1,20 @@
 import { Request, Response, NextFunction } from 'express'
 import { RequestContext, NotFoundError } from '@mikro-orm/core'
-import { Localidad } from './localidad.entity.js'
+import { Visita } from './visita.entity.js'
 
-function sanitizeLocalidadInput(
+function sanitizeVisitaInput(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   req.body.sanitizedInput = {
-    nombreLocalidad: req.body.nombreLocalidad,
-    descripcionLocalidad: req.body.descripcionLocalidad,
-    pais: req.body.pais,
+    nombre: req.body.nombre,
+    descripcion: req.body.descripcion,
+    altura: req.body.altura,
+    calle: req.body.calle,
+    latitud: req.body.latitud,
+    longitud: req.body.longitud,
+    localidad: req.body.localidad,
   }
 
   Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -19,19 +23,29 @@ function sanitizeLocalidadInput(
     }
   })
 
-  // Validación mínima: nombreLocalidad y pais son obligatorios (nullable: false en la entidad)
+  // Validación mínima: nombre, latitud, longitud y localidad son obligatorios (nullable: false en la entidad)
   if (
     req.method === 'POST' &&
-    (!req.body.sanitizedInput.nombreLocalidad ||
-      typeof req.body.sanitizedInput.nombreLocalidad !== 'string')
+    (!req.body.sanitizedInput.nombre ||
+      typeof req.body.sanitizedInput.nombre !== 'string')
   ) {
     return res
       .status(400)
-      .json({ message: 'nombreLocalidad es obligatorio y debe ser un texto' })
+      .json({ message: 'nombre es obligatorio y debe ser un texto' })
   }
 
-  if (req.method === 'POST' && !req.body.sanitizedInput.pais) {
-    return res.status(400).json({ message: 'pais es obligatorio' })
+  if (
+    req.method === 'POST' &&
+    (req.body.sanitizedInput.latitud === undefined ||
+      req.body.sanitizedInput.longitud === undefined)
+  ) {
+    return res
+      .status(400)
+      .json({ message: 'latitud y longitud son obligatorias' })
+  }
+
+  if (req.method === 'POST' && !req.body.sanitizedInput.localidad) {
+    return res.status(400).json({ message: 'localidad es obligatoria' })
   }
 
   next()
@@ -49,10 +63,14 @@ function parseId(req: Request, res: Response): number | null {
 async function findAll(req: Request, res: Response) {
   try {
     const em = RequestContext.getEntityManager()!
-    const localidades = await em.find(Localidad, {})
-    res.status(200).json({ message: 'found all localidades', data: localidades })
+    const filtro: any = {}
+    if (req.query.localidad) {
+      filtro.localidad = Number(req.query.localidad)
+    }
+    const visitas = await em.find(Visita, filtro)
+    res.status(200).json({ message: 'found all visitas', data: visitas })
   } catch (error: any) {
-    res.status(500).json({ message: 'Error al buscar las localidades' })
+    res.status(500).json({ message: 'Error al buscar las visitas' })
   }
 }
 
@@ -62,24 +80,24 @@ async function findOne(req: Request, res: Response) {
     if (id === null) return
 
     const em = RequestContext.getEntityManager()!
-    const localidad = await em.findOneOrFail(Localidad, { id })
-    res.status(200).json({ message: 'found localidad', data: localidad })
+    const visita = await em.findOneOrFail(Visita, { id })
+    res.status(200).json({ message: 'found visita', data: visita })
   } catch (error: any) {
     if (error instanceof NotFoundError) {
-      return res.status(404).json({ message: 'Localidad no encontrada' })
+      return res.status(404).json({ message: 'Visita no encontrada' })
     }
-    res.status(500).json({ message: 'Error al buscar la localidad' })
+    res.status(500).json({ message: 'Error al buscar la visita' })
   }
 }
 
 async function add(req: Request, res: Response) {
   try {
     const em = RequestContext.getEntityManager()!
-    const localidad = em.create(Localidad, req.body.sanitizedInput)
+    const visita = em.create(Visita, req.body.sanitizedInput)
     await em.flush()
-    res.status(201).json({ message: 'localidad created', data: localidad })
+    res.status(201).json({ message: 'visita created', data: visita })
   } catch (error: any) {
-    res.status(500).json({ message: 'Error al crear la localidad' })
+    res.status(500).json({ message: 'Error al crear la visita' })
   }
 }
 
@@ -89,15 +107,15 @@ async function update(req: Request, res: Response) {
     if (id === null) return
 
     const em = RequestContext.getEntityManager()!
-    const localidadToUpdate = await em.findOneOrFail(Localidad, { id })
-    em.assign(localidadToUpdate, req.body.sanitizedInput)
+    const visitaToUpdate = await em.findOneOrFail(Visita, { id })
+    em.assign(visitaToUpdate, req.body.sanitizedInput)
     await em.flush()
-    res.status(200).json({ message: 'localidad updated', data: localidadToUpdate })
+    res.status(200).json({ message: 'visita updated', data: visitaToUpdate })
   } catch (error: any) {
     if (error instanceof NotFoundError) {
-      return res.status(404).json({ message: 'Localidad no encontrada' })
+      return res.status(404).json({ message: 'Visita no encontrada' })
     }
-    res.status(500).json({ message: 'Error al actualizar la localidad' })
+    res.status(500).json({ message: 'Error al actualizar la visita' })
   }
 }
 
@@ -107,15 +125,15 @@ async function remove(req: Request, res: Response) {
     if (id === null) return
 
     const em = RequestContext.getEntityManager()!
-    const localidad = await em.findOneOrFail(Localidad, { id })
-    await em.removeAndFlush(localidad)
-    res.status(200).json({ message: 'localidad deleted' })
+    const visita = await em.findOneOrFail(Visita, { id })
+    await em.removeAndFlush(visita)
+    res.status(200).json({ message: 'visita deleted' })
   } catch (error: any) {
     if (error instanceof NotFoundError) {
-      return res.status(404).json({ message: 'Localidad no encontrada' })
+      return res.status(404).json({ message: 'Visita no encontrada' })
     }
-    res.status(500).json({ message: 'Error al eliminar la localidad' })
+    res.status(500).json({ message: 'Error al eliminar la visita' })
   }
 }
 
-export { sanitizeLocalidadInput, findAll, findOne, add, update, remove }
+export { sanitizeVisitaInput, findAll, findOne, add, update, remove }
