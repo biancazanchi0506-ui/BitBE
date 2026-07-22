@@ -8,6 +8,7 @@ import { hospedajeRouter } from './pais/hospedaje.routes.js'
 import { visitaRouter } from './pais/visita.routes.js'
 import { orm, syncSchema } from './shared/db/orm.js'
 import { RequestContext } from '@mikro-orm/core'
+import { lugarRouter } from './pais/lugar.routes.js'
 
 const app = express()
 
@@ -22,6 +23,7 @@ app.use('/api/usuarios', usuarioRouter)
 app.use('/api/paises', paisRouter)
 app.use('/api/localidades', localidadRouter)
 app.use('/api/viajes', viajeRouter)
+app.use('/api/lugares', lugarRouter)
 app.use('/api/hospedajes', hospedajeRouter)
 app.use('/api/visitas', visitaRouter)
 app.use((_, res) => {
