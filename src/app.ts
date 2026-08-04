@@ -9,6 +9,7 @@ import { visitaRouter } from './pais/visita.routes.js'
 import { orm, syncSchema } from './shared/db/orm.js'
 import { RequestContext } from '@mikro-orm/core'
 import { lugarRouter } from './pais/lugar.routes.js'
+import { resenaRouter } from './resena/resena.routes.js'
 
 const app = express()
 
@@ -26,6 +27,7 @@ app.use('/api/viajes', viajeRouter)
 app.use('/api/lugares', lugarRouter)
 app.use('/api/hospedajes', hospedajeRouter)
 app.use('/api/visitas', visitaRouter)
+app.use('/api/resenas', resenaRouter)
 app.use((_, res) => {
   return res.status(404).send({ message: 'Resource not found' })
 })

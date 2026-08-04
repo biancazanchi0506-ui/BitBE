@@ -1,6 +1,7 @@
-import { Entity, Property, ManyToOne, Rel } from '@mikro-orm/core'
+import { Entity, Property, ManyToOne, ManyToMany, Collection, Rel } from '@mikro-orm/core'
 import { BaseEntity } from '../shared/db/baseEntity.entity.js'
 import { Localidad } from './localidad.entity.js'
+import { Viaje } from '../usuario/viaje.entity.js'
 
 
 @Entity({
@@ -28,4 +29,7 @@ export abstract class Lugar extends BaseEntity {
 
   @ManyToOne(() => Localidad, { nullable: false })
   localidad!: Rel<Localidad>
+
+  @ManyToMany(() => Viaje, (viaje) => viaje.lugares)
+  viajes = new Collection<Viaje>(this)
 }

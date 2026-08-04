@@ -13,6 +13,7 @@ function sanitizeViajeInput(
 ) {
   req.body.sanitizedInput = {
     nombre: req.body.nombre,
+    descripcion: req.body.descripcion,
     fechaInicio: req.body.fechaInicio,
     fechaFin: req.body.fechaFin,
     creador: req.body.creador,
