@@ -20,6 +20,9 @@ app.use((req, res, next) => {
   RequestContext.create(orm.em, next)
 })
 
+import cors from 'cors'
+app.use(cors())
+
 app.use('/api/usuarios', usuarioRouter)
 app.use('/api/paises', paisRouter)
 app.use('/api/localidades', localidadRouter)
