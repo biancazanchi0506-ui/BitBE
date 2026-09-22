@@ -147,4 +147,27 @@ async function remove(req: Request, res: Response) {
   }
 }
 
-export { sanitizeUsuarioInput, findAll, findOne, add, update, remove }
+async function login(req: Request, res: Response) {
+  try {
+    const { email, password } = req.body
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email y contraseña son obligatorios' })
+    }
+
+    const em = RequestContext.getEntityManager()!
+    const usuario = await em.findOne(Usuario, { email })
+
+    if (!usuario || usuario.password !== password) {
+      return res.status(401).json({ message: 'Email o contraseña incorrectos' })
+    }
+
+    res.status(200).json({
+      message: 'Login exitoso',
+      data: toSafeUsuario(usuario),
+    })
+  } catch (error: any) {
+    res.status(500).json({ message: 'Error al iniciar sesión' })
+  }
+}
+
+export { sanitizeUsuarioInput, findAll, findOne, add, update, remove, login }
