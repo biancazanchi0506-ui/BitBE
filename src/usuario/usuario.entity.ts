@@ -22,7 +22,7 @@ export class Usuario extends BaseEntity {
   @Property({ length: 150, nullable: false, unique: true })
   email!: string
 
-  @Property({ length: 255, nullable: false })
+  @Property({ length: 255, nullable: false, hidden: true })
   password!: string
 
   @Property({ length: 50, nullable: true })

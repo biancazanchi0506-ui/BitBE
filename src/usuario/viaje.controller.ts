@@ -76,7 +76,19 @@ function parseId(req: Request, res: Response): number | null {
 async function findAll(req: Request, res: Response) {
   try {
     const em = RequestContext.getEntityManager()!
-    const viajes = await em.find(Viaje, {})
+    const filtro: any = {}
+    // ?excluirCreador=5 → trae los viajes de todos menos del usuario 5
+    if (req.query.excluirCreador !== undefined) {
+      const creadorId = Number.parseInt(req.query.excluirCreador as string)
+      if (Number.isNaN(creadorId)) {
+        return res.status(400).json({ message: 'excluirCreador debe ser un número válido' })
+      }
+      filtro.creador = { $ne: creadorId } // $ne = "distinto de"
+    }
+    const viajes = await em.find(Viaje, filtro, {
+      populate: ['creador'],          // trae el usuario completo, no solo su id
+      orderBy: { createdAt: 'desc' }, // lo último publicado, primero
+    })
     res.status(200).json({ message: 'found all viajes', data: viajes })
   } catch (error: any) {
     res.status(500).json({ message: 'Error al obtener los viajes' })
