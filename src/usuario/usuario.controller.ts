@@ -63,7 +63,26 @@ function toSafeUsuario(usuario: Usuario) {
 async function findAll(req: Request, res: Response) {
   try {
     const em = RequestContext.getEntityManager()!
-    const usuarios = await em.find(Usuario, {})
+    const filtro: any = {}
+    // ?buscar=ana → busca por nombre, apellido, username o email (buscador de participantes)
+    if (req.query.buscar) {
+      const texto = `%${req.query.buscar}%`
+      filtro.$or = [
+        { nombre: { $like: texto } },
+        { apellido: { $like: texto } },
+        { username: { $like: texto } },
+        { email: { $like: texto } },
+      ]
+    }
+    // ?excluir=5 → saca a un usuario del resultado (p. ej. el creador del viaje)
+    if (req.query.excluir !== undefined) {
+      const excluirId = Number.parseInt(req.query.excluir as string)
+      if (Number.isNaN(excluirId)) {
+        return res.status(400).json({ message: 'excluir debe ser un número válido' })
+      }
+      filtro.id = { $ne: excluirId }
+    }
+    const usuarios = await em.find(Usuario, filtro)
     res.status(200).json({
       message: 'found all usuarios',
       data: usuarios.map(toSafeUsuario),

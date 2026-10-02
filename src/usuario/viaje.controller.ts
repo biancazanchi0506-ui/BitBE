@@ -17,6 +17,9 @@ function sanitizeViajeInput(
     fechaInicio: req.body.fechaInicio,
     fechaFin: req.body.fechaFin,
     creador: req.body.creador,
+    // Relaciones N:M: llegan como arrays de ids
+    participantes: req.body.participantes,
+    lugares: req.body.lugares,
   }
 
   Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -44,6 +47,17 @@ function sanitizeViajeInput(
     }
     if (!req.body.sanitizedInput.creador) {
       return res.status(400).json({ message: 'creador es obligatorio' })
+    }
+  }
+
+  // participantes y lugares, si vienen, tienen que ser arrays de ids numéricos
+  for (const campo of ['participantes', 'lugares']) {
+    const valor = req.body.sanitizedInput[campo]
+    if (valor === undefined) continue
+    if (!Array.isArray(valor) || valor.some((id: any) => !Number.isInteger(id))) {
+      return res
+        .status(400)
+        .json({ message: `${campo} debe ser un array de ids numéricos` })
     }
   }
 
@@ -84,6 +98,14 @@ async function findAll(req: Request, res: Response) {
         return res.status(400).json({ message: 'excluirCreador debe ser un número válido' })
       }
       filtro.creador = { $ne: creadorId } // $ne = "distinto de"
+    }
+    // ?creador=5 → trae solo los viajes del usuario 5 (pantalla "Mis viajes")
+    if (req.query.creador !== undefined) {
+      const creadorId = Number.parseInt(req.query.creador as string)
+      if (Number.isNaN(creadorId)) {
+        return res.status(400).json({ message: 'creador debe ser un número válido' })
+      }
+      filtro.creador = creadorId
     }
     const viajes = await em.find(Viaje, filtro, {
       populate: ['creador'],          // trae el usuario completo, no solo su id

@@ -24,6 +24,10 @@ async function findAll(req: Request, res: Response) {
     if (req.query.localidad) {
       filtro.localidad = Number(req.query.localidad)
     }
+    // ?nombre=cata → búsqueda parcial, sin distinguir mayúsculas (buscador de la Home)
+    if (req.query.nombre) {
+      filtro.nombre = { $like: `%${req.query.nombre}%` }
+    }
     const lugares = await em.find(Lugar, filtro)
     res.status(200).json({ message: 'found all lugares', data: lugares })
   } catch (error: any) {
